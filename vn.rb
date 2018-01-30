@@ -29,35 +29,38 @@ class LVN
     v1, found = vn_search_add( s.op1 )
     v2, found = vn_search_add( s.op2 )
 
-    # Commutative Property Check
-    if (s.op == "+" || s.op == "*") 
-      expr =  "#{v1} #{s.op} #{v2}"
-      v3, found = vn_search_add( expr )
+    expr =  "#{v1} #{s.op} #{v2}"
+    # puts "Merp: #{expr}"
+    v3, found = vn_search_add( expr )
 
-      expr_comm = "#{v2} #{s.op} #{v1}"
-      v4, found_comm = vn_search_add( expr_comm )
-
-      # if (s.op == "+")
-      #   expr_stew1 = ""
-      # end
-
-
-      if found then
-        puts "#{expr} is redundant"
-        @unneeded << s
-      end
-      @n2v[ s.lhs ] = v3
-
-    else 
-      expr =  "#{v1} #{s.op} #{v2}"
-      v3, found = vn_search_add( expr )
-
-      if found then
-        puts "#{expr} is redundant"
-        @unneeded << s
-      end
-      @n2v[ s.lhs ] = v3  
+    if found then
+      puts "#{expr} is redundant"
+      @unneeded << s
     end
+    @n2v[ s.lhs ] = v3
+
+    if(s.op == "+" || s.op == "-" || s.op == "*" || s.op == "/" || s.op == "<<" || s.op == ">>")
+      if (s.op == "+" || s.op == "*")
+        expr_comm = "#{v2} #{s.op} #{v1}"
+        v4, found_comm = vn_search_add( expr_comm )
+        # puts "#{expr_comm}"
+        
+        if (s.op == "+")
+          # b = a - c
+          expr_stew1 = "#{v3} - #{v2}"
+          # puts "#{expr_stew1}"
+          v5, found_stew1 = vn_search_add( expr_stew1 )
+
+          # c = a - b
+          expr_stew2 = "#{v3} - #{v1}"
+          # puts "#{expr_stew2}"
+          v6, found_stew1 = vn_search_add( expr_stew2 )
+        end
+
+
+      end
+    end
+
   end
 
   def run_lvn
