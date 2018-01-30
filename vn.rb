@@ -79,13 +79,25 @@ class LVN
       if (s.op == "*")
         # b = a / c
         expr_stew5 = "#{v3} / #{v2}"
-        # puts "#{expr_stew3}"
+        # puts "#{expr_stew5}"
         v7, found_stew5 = vn_search_add( expr_stew5 )
 
         # c = a / b
         expr_stew6 = "#{v3} / #{v1}"
-        # puts "#{expr_stew4}"
+        # puts "#{expr_stew6}"
         v8, found_stew6 = vn_search_add( expr_stew6 )
+      end
+
+      if (s.op == "/")
+        # b = a * c
+        expr_stew7 = "#{v3} * #{v2}"
+        # puts "#{expr_stew5}"
+        v9, found_stew7 = vn_search_add( expr_stew7 )
+
+        # c = b / a
+        expr_stew8 = "#{v1} / #{v3}"
+        # puts "#{expr_stew6}"
+        v10, found_stew8 = vn_search_add( expr_stew8 )
       end
 
     end

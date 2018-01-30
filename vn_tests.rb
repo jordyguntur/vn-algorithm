@@ -58,6 +58,14 @@ module TestProgs
       @answers[b] << s2 << s3
     end
 
+    @intricate5 = Block.new( "stewart5" ) do |b|
+      s1 = Stmt.new( "a", "b", "/", "c" )
+      s2 = Stmt.new( "x", "a", "*", "c" )
+      s3 = Stmt.new( "z", "b", "/", "a" )
+      b.code << s1 << s2 << s3
+      @answers[b] << s2 << s3
+    end
+
     @constant = Block.new( "constant" ) do |b|
       s1 = Stmt.new( "a", "2", "*", "b" )
       s2 = Stmt.new( "c", "b", "+", "b" )
@@ -107,6 +115,10 @@ describe LVN do
 
   it "Stewart Extension (Multiplication)" do
     expect( LVN.new( @intricate4 ).unneeded ).to eq( @answers[@intricate4] )
+  end
+
+  it "Stewart Extension (Division)" do
+    expect( LVN.new( @intricate5 ).unneeded ).to eq( @answers[@intricate5] )
   end
 
   it "constant" do
