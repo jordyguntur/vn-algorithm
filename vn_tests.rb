@@ -66,6 +66,30 @@ module TestProgs
       @answers[b] << s2 << s3
     end
 
+    @intricate6 = Block.new( "stewart6" ) do |b|
+      s1 = Stmt.new( "a", "b", "<<", "c" )
+      s2 = Stmt.new( "x", "a", ">>", "c" )
+      s3 = Stmt.new( "z", "a", ">>", "b" )
+      b.code << s1 << s2 << s3
+      @answers[b] << s2 << s3
+    end
+
+    @intricate7 = Block.new( "stewart7" ) do |b|
+      s1 = Stmt.new( "a", "b", ">>", "c" )
+      s2 = Stmt.new( "x", "a", "<<", "c" )
+      s3 = Stmt.new( "z", "a", "<<", "b" )
+      b.code << s1 << s2 << s3
+      @answers[b] << s2 << s3
+    end
+
+    @intricate8 = Block.new( "stewart8" ) do |b|
+      s1 = Stmt.new( "a", "b", "+", "c" )
+      s2 = Stmt.new( "e", "a" )
+      s3 = Stmt.new( "d", "e", "-", "b" )
+      b.code << s1 << s2 << s3
+      @answers[b] << s3
+    end
+
     @constant = Block.new( "constant" ) do |b|
       s1 = Stmt.new( "a", "2", "*", "b" )
       s2 = Stmt.new( "c", "b", "+", "b" )
@@ -119,6 +143,18 @@ describe LVN do
 
   it "Stewart Extension (Division)" do
     expect( LVN.new( @intricate5 ).unneeded ).to eq( @answers[@intricate5] )
+  end
+
+  it "Stewart Extension (Left Shift)" do
+    expect( LVN.new( @intricate6 ).unneeded ).to eq( @answers[@intricate6] )
+  end
+
+  it "Stewart Extension (Right Shift)" do
+    expect( LVN.new( @intricate7 ).unneeded ).to eq( @answers[@intricate7] )
+  end
+
+  it "Stewart Extension (Test)" do
+    expect( LVN.new( @intricate8 ).unneeded ).to eq( @answers[@intricate8] )
   end
 
   it "constant" do

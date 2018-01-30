@@ -39,8 +39,11 @@ class LVN
     end
     @n2v[ s.lhs ] = v3
 
-    if(s.op == "+" || s.op == "-" || s.op == "*" || s.op == "/" || s.op == "<<" || s.op == ">>")
+    puts "v1:   #{v1}"
+    puts "v2:   #{v2}"
+    puts "v3:   #{v3}"
 
+    if((s.op == "+" || s.op == "-" || s.op == "*" || s.op == "/" || s.op == "<<" || s.op == ">>")) 
       # Commutative Property
       if (s.op == "+" || s.op == "*")
         expr_comm = "#{v2} #{s.op} #{v1}"
@@ -51,6 +54,7 @@ class LVN
 
       # Addition
       if (s.op == "+")
+        puts "Stewart Addition"
         # b = a - c
         expr_stew1 = "#{v3} - #{v2}"
         # puts "#{expr_stew1}"
@@ -64,6 +68,7 @@ class LVN
 
       # Subtraction
       if (s.op == "-")
+        puts "Stewart Subtraction"
         # b = a + c
         expr_stew3 = "#{v3} + #{v2}"
         # puts "#{expr_stew3}"
@@ -71,12 +76,13 @@ class LVN
 
         # c = b - a
         expr_stew4 = "#{v1} - #{v3}"
-        # puts "#{expr_stew4}"
         v6, found_stew4 = vn_search_add( expr_stew4 )
+
       end
 
       # Multiplication
       if (s.op == "*")
+        puts "Stewart Multiplication"
         # b = a / c
         expr_stew5 = "#{v3} / #{v2}"
         # puts "#{expr_stew5}"
@@ -88,7 +94,9 @@ class LVN
         v8, found_stew6 = vn_search_add( expr_stew6 )
       end
 
+      # Division
       if (s.op == "/")
+        puts "Stewart Division"
         # b = a * c
         expr_stew7 = "#{v3} * #{v2}"
         # puts "#{expr_stew5}"
@@ -98,6 +106,30 @@ class LVN
         expr_stew8 = "#{v1} / #{v3}"
         # puts "#{expr_stew6}"
         v10, found_stew8 = vn_search_add( expr_stew8 )
+      end
+
+      # Left Shift Operator
+      if (s.op == "<<")
+        puts "Stewart Left Shift"
+        # b = a >> c
+        expr_stew9 = "#{v3} >> #{v2}"
+        v11, found_stew9 = vn_search_add( expr_stew9 )
+
+        # c = a >> b
+        expr_stew10 = "#{v3} >> #{v1}"
+        v12, found_stew10 = vn_search_add( expr_stew10 )
+      end
+
+      # Right Shift Operator
+      if (s.op == ">>")
+        puts "Stewart Right Shift"
+        # b = a << c
+        expr_stew11 = "#{v3} << #{v2}"
+        v13, found_stew11 = vn_search_add( expr_stew11 )
+
+        # c = a << b
+        expr_stew12 = "#{v3} << #{v1}"
+        v14, found_stew12 = vn_search_add( expr_stew12 )
       end
 
     end
