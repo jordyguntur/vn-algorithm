@@ -24,7 +24,7 @@ module TestProgs
       s1 = Stmt.new( "a", "b", "+", "c" )
       s2 = Stmt.new( "a", "c", "+", "b" )
       b.code << s1 << s2
-      @answers[b] << s2
+      @answers[b] << s2 
     end
 
     @intricate = Block.new( "stewart" ) do |b|
@@ -97,6 +97,22 @@ module TestProgs
       @answers[b] << s2
     end
 
+    @constant2 = Block.new( "constant2" ) do |b|
+      s1 = Stmt.new( "a", "b" )
+      s2 = Stmt.new( "c", "b", "+", "0" )
+      s3 = Stmt.new( "d", "0", "+", "b" )
+      b.code << s1 << s2 << s3
+      @answers[b] << s2 << s3
+    end
+
+    @constant3 = Block.new( "constant3" ) do |b|
+      s1 = Stmt.new( "a", "b" )
+      s2 = Stmt.new( "c", "b", "*", "1" )
+      s3 = Stmt.new( "d", "1", "*", "b" )
+      b.code << s1 << s2 << s3
+      @answers[b] << s2 << s3
+    end
+
     @shift = Block.new( "shift" ) do |b|
       s1 = Stmt.new( "a", "2", "*", "b")
       s2 = Stmt.new( "d", "b", "<<", "1")
@@ -159,6 +175,14 @@ describe LVN do
 
   it "constant" do
     expect( LVN.new( @constant ).unneeded ).to eq( @answers[@constant] )
+  end
+
+  it "constant (with 0)" do
+    expect( LVN.new( @constant2 ).unneeded ).to eq( @answers[@constant2] )
+  end
+
+  it "constant (with 1)" do
+    expect( LVN.new( @constant3 ).unneeded ).to eq( @answers[@constant3] )
   end
 
   it "shift" do

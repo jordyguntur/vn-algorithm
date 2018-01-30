@@ -22,14 +22,30 @@ class LVN
     # s.lhs = s.op1
     v, found = vn_search_add( s.op1 )
     @n2v[ s.lhs ] = v
+
+    v00, found_ident0 = vn_search_add("0")
+    v01, found_ident1 = vn_search_add("1")
+
+    # Zero Identity
+    expr_ident0 = "#{v} + #{v00}"
+    v011, found_ident0 = vn_search_add( expr_ident0 )
+    expr_ident1 = "#{v00} + #{v}"
+    v012, found_ident1 = vn_search_add( expr_ident1 )
+
+    # One Identity
+    expr_ident2 = "#{v} * #{v01}"
+    v013, found_ident2 = vn_search_add( expr_ident2 )
+    expr_ident3 = "#{v01} * #{v}"
+    v014, found_ident3 = vn_search_add( expr_ident3 )
  end
     
   def vn_expr_stmt( s )
     # s.lhs = s.op1 s.op s.op2
 
-    v00, found_iden0 = vn_search_add("0")
-    v01, found_iden1 = vn_search_add("1")
-    v02, found_iden2 = vn_search_add("2")
+    # Constants
+    v00, found_ident0 = vn_search_add("0")
+    v01, found_ident1 = vn_search_add("1")
+    v02, found_ident2 = vn_search_add("2")
 
     v1, found = vn_search_add( s.op1 )
     v2, found = vn_search_add( s.op2 )
@@ -55,11 +71,6 @@ class LVN
 
       # Addition
       if (s.op == "+")
-        puts "Stewart Addition"
-
-        # a = a + 0
-        # expr_ident0 = "#{v3} + #{v00}"
-
         # b = a - c
         expr_stew1 = "#{v3} - #{v2}"
         # puts "#{expr_stew1}"
@@ -73,7 +84,6 @@ class LVN
 
       # Subtraction
       if (s.op == "-")
-        puts "Stewart Subtraction"
         # b = a + c
         expr_stew3 = "#{v3} + #{v2}"
         # puts "#{expr_stew3}"
@@ -87,15 +97,20 @@ class LVN
 
       # Multiplication
       if (s.op == "*")
-        puts "Stewart Multiplication"
 
         # a = 2 * b
         if (s.op1 == "2")
           expr_ident2 = "#{v2} + #{v2}"
           v021, found_ident2 = vn_search_add( expr_ident2 )
+
+          expr_lshift = "#{v2} << #{v01}"
+          v023, found_ident2 = vn_search_add( expr_lshift )
         elsif (s.op2 == "2")
           expr_ident3 = "#{v1} + #{v1}"
           v022, found_ident3 = vn_search_add( expr_ident3 )
+
+          expr_lshift = "#{v2} << #{v01}"
+          v023, found_ident2 = vn_search_add( expr_lshift )
         end
 
         # b = a / c
@@ -111,7 +126,6 @@ class LVN
 
       # Division
       if (s.op == "/")
-        puts "Stewart Division"
         # b = a * c
         expr_stew7 = "#{v3} * #{v2}"
         # puts "#{expr_stew5}"
@@ -125,7 +139,6 @@ class LVN
 
       # Left Shift Operator
       if (s.op == "<<")
-        puts "Stewart Left Shift"
         # b = a >> c
         expr_stew9 = "#{v3} >> #{v2}"
         v11, found_stew9 = vn_search_add( expr_stew9 )
@@ -137,7 +150,6 @@ class LVN
 
       # Right Shift Operator
       if (s.op == ">>")
-        puts "Stewart Right Shift"
         # b = a << c
         expr_stew11 = "#{v3} << #{v2}"
         v13, found_stew11 = vn_search_add( expr_stew11 )
