@@ -33,23 +33,31 @@ class LVN
     if (s.op == "+" || s.op == "*") 
       expr =  "#{v1} #{s.op} #{v2}"
       v3, found = vn_search_add( expr )
-      if !found
-        expr_comm = "#{v2} #{s.op} #{v1}"
-        v3, found_comm = vn_search_add( expr_comm )
-        if found_comm
-          found = true;
-        end
+
+      expr_comm = "#{v2} #{s.op} #{v1}"
+      v4, found_comm = vn_search_add( expr_comm )
+
+      # if (s.op == "+")
+      #   expr_stew1 = ""
+      # end
+
+
+      if found then
+        puts "#{expr} is redundant"
+        @unneeded << s
       end
+      @n2v[ s.lhs ] = v3
+
     else 
       expr =  "#{v1} #{s.op} #{v2}"
       v3, found = vn_search_add( expr )
-    end
 
-    if found then
-      puts "#{expr} is redundant"
-      @unneeded << s
+      if found then
+        puts "#{expr} is redundant"
+        @unneeded << s
+      end
+      @n2v[ s.lhs ] = v3  
     end
-    @n2v[ s.lhs ] = v3  
   end
 
   def run_lvn
