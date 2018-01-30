@@ -153,7 +153,7 @@ describe LVN do
     expect( LVN.new( @intricate7 ).unneeded ).to eq( @answers[@intricate7] )
   end
 
-  it "Stewart Extension (Test)" do
+  it "Stewart Extension (Note 2 Test)" do
     expect( LVN.new( @intricate8 ).unneeded ).to eq( @answers[@intricate8] )
   end
 

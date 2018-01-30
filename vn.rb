@@ -26,6 +26,11 @@ class LVN
     
   def vn_expr_stmt( s )
     # s.lhs = s.op1 s.op s.op2
+
+    v00, found_iden0 = vn_search_add("0")
+    v01, found_iden1 = vn_search_add("1")
+    v02, found_iden2 = vn_search_add("2")
+
     v1, found = vn_search_add( s.op1 )
     v2, found = vn_search_add( s.op2 )
 
@@ -39,10 +44,6 @@ class LVN
     end
     @n2v[ s.lhs ] = v3
 
-    puts "v1:   #{v1}"
-    puts "v2:   #{v2}"
-    puts "v3:   #{v3}"
-
     if((s.op == "+" || s.op == "-" || s.op == "*" || s.op == "/" || s.op == "<<" || s.op == ">>")) 
       # Commutative Property
       if (s.op == "+" || s.op == "*")
@@ -55,6 +56,10 @@ class LVN
       # Addition
       if (s.op == "+")
         puts "Stewart Addition"
+
+        # a = a + 0
+        # expr_ident0 = "#{v3} + #{v00}"
+
         # b = a - c
         expr_stew1 = "#{v3} - #{v2}"
         # puts "#{expr_stew1}"
@@ -83,6 +88,16 @@ class LVN
       # Multiplication
       if (s.op == "*")
         puts "Stewart Multiplication"
+
+        # a = 2 * b
+        if (s.op1 == "2")
+          expr_ident2 = "#{v2} + #{v2}"
+          v021, found_ident2 = vn_search_add( expr_ident2 )
+        elsif (s.op2 == "2")
+          expr_ident3 = "#{v1} + #{v1}"
+          v022, found_ident3 = vn_search_add( expr_ident3 )
+        end
+
         # b = a / c
         expr_stew5 = "#{v3} / #{v2}"
         # puts "#{expr_stew5}"
